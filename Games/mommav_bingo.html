@@ -1,90 +1,549 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Momma V's Soul Food Bingo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Permanent+Marker&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="styles/mommav_bingo.css" rel="stylesheet">
-</head>
-<body class="min-h-screen p-8" style="background: #fff;">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="title text-4xl md:text-6xl text-center mb-2 text-[#8B4513]">Momma V's Soul Food Bingo</h1>
-        <p class="subtitle text-xl md:text-2xl text-center mb-8 text-[#8B4513]">Where every square is a taste of home! 🍗</p>
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&amp;family=Permanent+Marker&amp;family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFF8E1;
+            background-image: 
+                linear-gradient(45deg, #F5DEB3 25%, transparent 25%),
+                linear-gradient(-45deg, #F5DEB3 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #F5DEB3 75%),
+                linear-gradient(-45deg, transparent 75%, #F5DEB3 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
         
-        <!-- Game Mode Selection -->
-        <div class="mb-8 text-center">
-            <h2 class="text-2xl font-bold mb-4">Game Mode</h2>
-            <div id="gameMode" class="text-xl font-bold mb-2">Classic Mode</div>
-            <p id="gameModeDescription" class="text-lg mb-4">Take your time and enjoy the game!</p>
-            <div id="gameModes" class="flex flex-wrap justify-center gap-4 mb-4"></div>
-            <div id="timer" class="text-2xl font-bold hidden">5:00</div>
+        .title {
+            font-family: 'Permanent Marker', cursive;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-family: 'Satisfy', cursive;
+        }
+        
+        .bingo-card {
+            background-color: #FFFAF0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 8px solid #8B4513;
+        }
+        
+        .bingo-square {
+            background-color: #FFF8DC;
+            border: 2px solid #8B4513;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bingo-square:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .bingo-square.selected {
+            background-color: #F4A460;
+            color: white;
+        }
+        
+        .bingo-square.selected::before {
+            content: "✓";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.2rem;
+            color: #8B4513;
+        }
+        
+        .bingo-square.called {
+            animation: highlight 2s;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: #FFD700; }
+            100% { background-color: #FFF8DC; }
+        }
+        
+        .bingo-header {
+            background-color: #CD853F;
+            color: white;
+            font-weight: bold;
+            border: 2px solid #8B4513;
+        }
+        
+        .free-space {
+            background-color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .win-message {
+            background-color: rgba(139, 69, 19, 0.9);
+            border: 5px solid #FFD700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .wooden-spoon {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            right: -20px;
+            top: 20px;
+            transform: rotate(45deg);
+            z-index: 1;
+        }
+        
+        .caller-box {
+            background-color: #8B4513;
+            border: 4px solid #FFD700;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .called-item {
+            background-color: #FFF8DC;
+            border: 2px solid #CD853F;
+            transition: all 0.3s ease;
+        }
+        
+        .called-item:nth-child(odd) {
+            background-color: #F5DEB3;
+        }
+        
+        .current-call {
+            animation: bounce 0.5s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.relative{position:relative}.inset-0{inset:0px}.z-50{z-index:50}.order-1{order:1}.order-2{order:2}.mx-4{margin-left:1rem;margin-right:1rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-8{margin-top:2rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-square{aspect-ratio:1 / 1}.max-h-\[300px\]{max-height:300px}.min-h-screen{min-height:100vh}.min-h-\[120px\]{min-height:120px}.w-full{width:100%}.max-w-5xl{max-width:64rem}.max-w-md{max-width:28rem}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.bg-\[\#228B22\]{--tw-bg-opacity:1;background-color:rgb(34 139 34 / var(--tw-bg-opacity, 1))}.bg-\[\#4169E1\]{--tw-bg-opacity:1;background-color:rgb(65 105 225 / var(--tw-bg-opacity, 1))}.bg-\[\#CD853F\]{--tw-bg-opacity:1;background-color:rgb(205 133 63 / var(--tw-bg-opacity, 1))}.bg-\[\#FFD700\]{--tw-bg-opacity:1;background-color:rgb(255 215 0 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-4{padding:1rem}.p-8{padding:2rem}.p-2{padding:0.5rem}.px-4{padding-left:1rem;padding-right:1rem}.py-8{padding-top:2rem;padding-bottom:2rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.text-\[\#8B4513\]{--tw-text-opacity:1;color:rgb(139 69 19 / var(--tw-text-opacity, 1))}.text-\[\#A0522D\]{--tw-text-opacity:1;color:rgb(160 82 45 / var(--tw-text-opacity, 1))}.text-\[\#CD853F\]{--tw-text-opacity:1;color:rgb(205 133 63 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:bg-\[\#0000CD\]:hover{--tw-bg-opacity:1;background-color:rgb(0 0 205 / var(--tw-bg-opacity, 1))}.hover\:bg-\[\#006400\]:hover{--tw-bg-opacity:1;background-color:rgb(0 100 0 / var(--tw-bg-opacity, 1))}.hover\:bg-\[\#8B4513\]:hover{--tw-bg-opacity:1;background-color:rgb(139 69 19 / var(--tw-bg-opacity, 1))}.hover\:bg-\[\#F4A460\]:hover{--tw-bg-opacity:1;background-color:rgb(244 164 96 / var(--tw-bg-opacity, 1))}@media (min-width: 640px){.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}}@media (min-width: 768px){.md\:block{display:block}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-6xl{font-size:3.75rem;line-height:1}}@media (min-width: 1024px){.lg\:order-1{order:1}.lg\:order-2{order:2}.lg\:col-span-1{grid-column:span 1 / span 1}.lg\:col-span-2{grid-column:span 2 / span 2}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}</style></head>
+<body class="min-h-screen py-8 px-4">
+    <div class="max-w-5xl mx-auto">
+        <!-- Wooden Spoon SVG -->
+        <div class="wooden-spoon hidden md:block">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 80 L30 20 Q32 10 40 5 T60 5 Q68 10 70 20 L80 80" fill="#8B4513"></path>
+                <ellipse cx="50" cy="5" rx="20" ry="5" fill="#A0522D"></ellipse>
+                <rect x="45" y="80" width="10" height="15" fill="#8B4513"></rect>
+            </svg>
         </div>
         
-        <!-- Stats Display -->
-        <div class="mb-8 bg-white/10 p-4 rounded-lg">
-            <h2 class="text-2xl font-bold mb-4 text-center">Your Stats</h2>
-            <div id="statsDisplay" class="text-lg"></div>
-            <button id="resetStats" class="btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mt-4">
-                Reset Stats
-            </button>
+        <!-- Header -->
+        <div class="relative mb-6 text-center">
+            <h1 class="title text-5xl md:text-6xl text-[#8B4513] mb-2">Momma V's</h1>
+            <h2 class="title text-4xl md:text-5xl text-[#CD853F] mb-4">Soul Food Bingo</h2>
+            <p class="subtitle text-xl md:text-2xl text-[#A0522D]">"Get outta my kitchen unless you playin' to win!"</p>
         </div>
         
-        <!-- Game Controls -->
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
-            <button id="newGameBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
-                New Game
-            </button>
-            <button id="callItemBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
-                Call Item
-            </button>
-            <button id="checkBingoBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
-                Check Bingo
-            </button>
-            <button id="autoPlayBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
-                Auto Play: OFF
-            </button>
-            <button id="toggleSound" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
-                🔊 Sound: ON
-            </button>
-        </div>
-        
-        <!-- Bingo Card -->
-        <div class="bingo-card mb-8">
-            <div class="grid grid-cols-5 text-center mb-2">
-                <div class="bingo-header">B</div>
-                <div class="bingo-header">I</div>
-                <div class="bingo-header">N</div>
-                <div class="bingo-header">G</div>
-                <div class="bingo-header">O</div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Caller Section -->
+            <div class="lg:col-span-1 order-2 lg:order-1">
+                <div class="caller-box rounded-lg p-4 text-center mb-4">
+                    <h3 class="text-white text-xl font-bold mb-2">Momma V's Call</h3>
+                    <div id="currentCall" class="bg-white rounded-lg p-4 mb-4 min-h-[120px] flex flex-col items-center justify-center">
+                        <div id="callIcon" class="text-4xl mb-2">🎮</div>
+                        <div id="callText" class="text-xl font-bold">Press "Call Item" to start!</div>
+                    </div>
+                    <button id="callItemBtn" class="btn bg-[#FFD700] hover:bg-[#F4A460] text-[#8B4513] font-bold py-2 px-6 rounded-full w-full">
+                        Call Item
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-lg p-4 shadow-lg">
+                    <h3 class="text-[#8B4513] text-xl font-bold mb-2">Called Items</h3>
+                    <div id="calledItems" class="max-h-[300px] overflow-y-auto"></div>
+                </div>
             </div>
-            <div id="bingoGrid" class="grid grid-cols-5 gap-2"></div>
-        </div>
-        
-        <!-- Caller Box -->
-        <div class="caller-box mb-8">
-            <div class="text-center mb-4">
-                <span id="callIcon" class="text-4xl">🎮</span>
-                <p id="callText" class="text-xl mt-2">Press "Call Item" to start!</p>
+            
+            <!-- Right Column: Bingo Card -->
+            <div class="lg:col-span-2 order-1 lg:order-2">
+                <!-- Game Controls -->
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <button id="newGameBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
+                        New Game
+                    </button>
+                    <button id="checkBingoBtn" class="btn bg-[#228B22] hover:bg-[#006400] text-white font-bold py-2 px-6 rounded-full">
+                        Check For Bingo!
+                    </button>
+                    <button id="autoPlayBtn" class="btn bg-[#4169E1] hover:bg-[#0000CD] text-white font-bold py-2 px-6 rounded-full">
+                        Auto Play: OFF
+                    </button>
+                </div>
+                
+                <!-- Bingo Card -->
+                <div class="bingo-card rounded-lg overflow-hidden mb-8">
+                    <!-- Bingo Headers -->
+                    <div class="grid grid-cols-5 text-center">
+                        <div class="bingo-header py-3 text-2xl">B</div>
+                        <div class="bingo-header py-3 text-2xl">I</div>
+                        <div class="bingo-header py-3 text-2xl">N</div>
+                        <div class="bingo-header py-3 text-2xl">G</div>
+                        <div class="bingo-header py-3 text-2xl">O</div>
+                    </div>
+                    
+                    <!-- Bingo Grid -->
+                    <div id="bingoGrid" class="grid grid-cols-5"><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="0"><div class="icon">🥄</div><div class="text-xs sm:text-sm font-medium">Taste this real quick</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="1"><div class="icon">🌶️</div><div class="text-xs sm:text-sm font-medium">Don't forget the hot sauce</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="2"><div class="icon">🔍</div><div class="text-xs sm:text-sm font-medium">Who touched my foil?</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="3"><div class="icon">🥬</div><div class="text-xs sm:text-sm font-medium">Collard Greens</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="4"><div class="icon">❤️</div><div class="text-xs sm:text-sm font-medium">I made your favorite</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="5"><div class="icon">🧂</div><div class="text-xs sm:text-sm font-medium">A lil somethin' for flavor</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="6"><div class="icon">🍗</div><div class="text-xs sm:text-sm font-medium">Fried Chicken</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="7"><div class="icon">🔄</div><div class="text-xs sm:text-sm font-medium">Seconds, anyone?</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="8"><div class="icon">👐</div><div class="text-xs sm:text-sm font-medium">I don't measure, I feel it</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="9"><div class="icon">📜</div><div class="text-xs sm:text-sm font-medium">Family recipe</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="10"><div class="icon">🥧</div><div class="text-xs sm:text-sm font-medium">Peach Cobbler</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="11"><div class="icon">🍖</div><div class="text-xs sm:text-sm font-medium">Put some meat on them bones</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center free-space selected" data-index="12"><div class="icon">⭐</div><div class="text-xs sm:text-sm font-medium">FREE</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="13"><div class="icon">🙏</div><div class="text-xs sm:text-sm font-medium">Say grace</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="14"><div class="icon">🦃</div><div class="text-xs sm:text-sm font-medium">Greens need smoked turkey</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="15"><div class="icon">🧀</div><div class="text-xs sm:text-sm font-medium">Mac &amp; Cheese</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="16"><div class="icon">🤫</div><div class="text-xs sm:text-sm font-medium">That's my secret ingredient</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="17"><div class="icon">🥤</div><div class="text-xs sm:text-sm font-medium">Kool-Aid</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="18"><div class="icon">♨️</div><div class="text-xs sm:text-sm font-medium">Let it simmer</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="19"><div class="icon">🧼</div><div class="text-xs sm:text-sm font-medium">Wash your hands first</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="20"><div class="icon">📦</div><div class="text-xs sm:text-sm font-medium">Take some home with you</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="21"><div class="icon">📅</div><div class="text-xs sm:text-sm font-medium">Sunday dinner</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="22"><div class="icon">✨</div><div class="text-xs sm:text-sm font-medium">You better clean your plate</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="23"><div class="icon">🍞</div><div class="text-xs sm:text-sm font-medium">Cornbread</div></div><div class="bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center " data-index="24"><div class="icon">🚪</div><div class="text-xs sm:text-sm font-medium">Get out my kitchen!</div></div></div>
+                </div>
             </div>
-            <div id="calledItems" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"></div>
         </div>
         
-        <!-- Win Message -->
-        <div id="winMessage" class="win-message hidden">
-            <h2 class="text-3xl font-bold mb-4">BINGO! 🎉</h2>
-            <div id="winStats" class="text-xl mb-4"></div>
-            <button class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full" onclick="this.parentElement.classList.add('hidden')">
-                Play Again
-            </button>
+        <!-- Win Message (Hidden by default) -->
+        <div id="winMessage" class="win-message hidden fixed inset-0 flex items-center justify-center z-50">
+            <div class="bg-white p-8 rounded-lg text-center max-w-md mx-4">
+                <h2 class="title text-3xl text-[#8B4513] mb-4">BINGO!</h2>
+                <p class="text-xl mb-6">"That's how we do it in Momma V's kitchen!"</p>
+                <button id="closeWinBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
+                    Keep Playing
+                </button>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-8 text-[#8B4513]">
+            <p class="subtitle text-xl">"Don't forget the hot sauce, baby!"</p>
         </div>
     </div>
-    
-    <!-- Scripts -->
-    <script src="js/game-config.js"></script>
-    <script src="js/game-stats.js"></script>
-    <script src="js/bingo-content.js"></script>
-    <script src="js/mommav_bingo.js"></script>
-</body>
-</html>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Soul food bingo content
+            const bingoContent = [
+                { text: "Fix ya plate", icon: "🍽️" },
+                { text: "Who touched my foil?", icon: "🔍" },
+                { text: "Get out my kitchen!", icon: "🚪" },
+                { text: "A lil somethin' for flavor", icon: "🧂" },
+                { text: "Don't forget the hot sauce", icon: "🌶️" },
+                { text: "Taste this real quick", icon: "🥄" },
+                { text: "I don't measure, I feel it", icon: "👐" },
+                { text: "That's how my mama made it", icon: "👵" },
+                { text: "You better clean your plate", icon: "✨" },
+                { text: "Put some meat on them bones", icon: "🍖" },
+                { text: "I made your favorite", icon: "❤️" },
+                { text: "Take some home with you", icon: "📦" },
+                { text: "FREE", icon: "⭐", isFreeSpace: true },
+                { text: "Let it simmer", icon: "♨️" },
+                { text: "Fried Chicken", icon: "🍗" },
+                { text: "Mac & Cheese", icon: "🧀" },
+                { text: "Collard Greens", icon: "🥬" },
+                { text: "Cornbread", icon: "🍞" },
+                { text: "Peach Cobbler", icon: "🥧" },
+                { text: "Sweet Tea", icon: "🍹" },
+                { text: "Kool-Aid", icon: "🥤" },
+                { text: "Sunday dinner", icon: "📅" },
+                { text: "Wash your hands first", icon: "🧼" },
+                { text: "Say grace", icon: "🙏" },
+                { text: "That's my secret ingredient", icon: "🤫" },
+                { text: "Greens need smoked turkey", icon: "🦃" },
+                { text: "Lick the spoon", icon: "👅" },
+                { text: "Add more butter", icon: "🧈" },
+                { text: "Family recipe", icon: "📜" },
+                { text: "Seconds, anyone?", icon: "🔄" }
+            ];
+            
+            let boardContent = [];
+            let calledItems = [];
+            let autoPlayInterval = null;
+            let isAutoPlaying = false;
+            
+            // Shuffle and select content for the board
+            function shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+            
+            function generateBingoBoard() {
+                const bingoGrid = document.getElementById('bingoGrid');
+                bingoGrid.innerHTML = '';
+                
+                // Reset game state
+                calledItems = [];
+                document.getElementById('calledItems').innerHTML = '';
+                document.getElementById('callIcon').textContent = '🎮';
+                document.getElementById('callText').textContent = 'Press "Call Item" to start!';
+                
+                // Stop auto play if it's running
+                if (isAutoPlaying) {
+                    toggleAutoPlay();
+                }
+                
+                // Shuffle and get 24 items (leaving space for FREE in the middle)
+                const shuffledContent = shuffleArray([...bingoContent]);
+                boardContent = [];
+                
+                // Fill the board content with 24 items, ensuring FREE space is in the middle
+                let nonFreeItems = shuffledContent.filter(item => !item.isFreeSpace);
+                nonFreeItems = nonFreeItems.slice(0, 24); // Ensure we only take 24 items
+                
+                for (let i = 0; i < 25; i++) {
+                    if (i === 12) { // Middle position (0-indexed)
+                        boardContent.push(bingoContent.find(item => item.isFreeSpace));
+                    } else {
+                        boardContent.push(nonFreeItems.pop());
+                    }
+                }
+                
+                // Create the grid
+                for (let i = 0; i < 25; i++) {
+                    const item = boardContent[i];
+                    const square = document.createElement('div');
+                    square.className = `bingo-square flex flex-col items-center justify-center p-2 aspect-square text-center ${item.isFreeSpace ? 'free-space selected' : ''}`;
+                    square.dataset.index = i;
+                    
+                    const icon = document.createElement('div');
+                    icon.className = 'icon';
+                    icon.textContent = item.icon;
+                    
+                    const text = document.createElement('div');
+                    text.className = 'text-xs sm:text-sm font-medium';
+                    text.textContent = item.text;
+                    
+                    square.appendChild(icon);
+                    square.appendChild(text);
+                    
+                    // Add click event to toggle selection
+                    square.addEventListener('click', function() {
+                        this.classList.toggle('selected');
+                    });
+                    
+                    bingoGrid.appendChild(square);
+                }
+            }
+            
+            // Call a random bingo item
+            function callItem() {
+                // If all items have been called, reset
+                if (calledItems.length >= bingoContent.length - 1) { // -1 for FREE space
+                    alert("All items have been called! Starting over.");
+                    calledItems = [];
+                    document.getElementById('calledItems').innerHTML = '';
+                }
+                
+                // Find an item that hasn't been called yet
+                let availableItems = bingoContent.filter(item => 
+                    !item.isFreeSpace && !calledItems.some(called => called.text === item.text)
+                );
+                
+                if (availableItems.length === 0) {
+                    return;
+                }
+                
+                // Select a random item
+                const randomIndex = Math.floor(Math.random() * availableItems.length);
+                const calledItem = availableItems[randomIndex];
+                
+                // Update the current call display
+                document.getElementById('callIcon').textContent = calledItem.icon;
+                document.getElementById('callText').textContent = calledItem.text;
+                
+                // Add to called items list
+                calledItems.unshift(calledItem);
+                
+                // Update the called items display
+                updateCalledItemsDisplay();
+                
+                // Highlight the square on the board if it exists
+                highlightCalledSquare(calledItem);
+                
+                // Speak the called item
+                speakCalledItem(calledItem);
+            }
+            
+            function updateCalledItemsDisplay() {
+                const calledItemsContainer = document.getElementById('calledItems');
+                calledItemsContainer.innerHTML = '';
+                
+                calledItems.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = `called-item p-2 rounded-md mb-2 flex items-center ${index === 0 ? 'current-call' : ''}`;
+                    
+                    const iconElement = document.createElement('span');
+                    iconElement.className = 'text-xl mr-2';
+                    iconElement.textContent = item.icon;
+                    
+                    const textElement = document.createElement('span');
+                    textElement.textContent = item.text;
+                    
+                    itemElement.appendChild(iconElement);
+                    itemElement.appendChild(textElement);
+                    calledItemsContainer.appendChild(itemElement);
+                });
+            }
+            
+            function highlightCalledSquare(calledItem) {
+                const squares = document.querySelectorAll('.bingo-square');
+                
+                squares.forEach(square => {
+                    const index = parseInt(square.dataset.index);
+                    if (boardContent[index] && boardContent[index].text === calledItem.text) {
+                        square.classList.add('called');
+                        setTimeout(() => {
+                            square.classList.remove('called');
+                        }, 2000);
+                    }
+                });
+            }
+            
+            function speakCalledItem(item) {
+                // Create Momma V's sayings to announce the item
+                const sayings = [
+                    `${item.text}! You heard me, ${item.text}!`,
+                    `Next up is ${item.text}, y'all!`,
+                    `${item.text}! Mark it if you got it!`,
+                    `Momma V says ${item.text}!`,
+                    `Listen up now, ${item.text}!`
+                ];
+                
+                const randomSaying = sayings[Math.floor(Math.random() * sayings.length)];
+                
+                // Use speech synthesis if available
+                if ('speechSynthesis' in window) {
+                    const speech = new SpeechSynthesisUtterance(randomSaying);
+                    speech.rate = 0.9;
+                    speech.pitch = 1.1;
+                    window.speechSynthesis.speak(speech);
+                }
+            }
+            
+            // Check for bingo win conditions
+            function checkForBingo() {
+                const squares = document.querySelectorAll('.bingo-square');
+                const selectedIndices = Array.from(squares)
+                    .filter(square => square.classList.contains('selected'))
+                    .map(square => parseInt(square.dataset.index));
+                
+                // Check rows
+                for (let row = 0; row < 5; row++) {
+                    const rowIndices = [row*5, row*5+1, row*5+2, row*5+3, row*5+4];
+                    if (rowIndices.every(index => selectedIndices.includes(index))) {
+                        return true;
+                    }
+                }
+                
+                // Check columns
+                for (let col = 0; col < 5; col++) {
+                    const colIndices = [col, col+5, col+10, col+15, col+20];
+                    if (colIndices.every(index => selectedIndices.includes(index))) {
+                        return true;
+                    }
+                }
+                
+                // Check diagonals
+                const diagonal1 = [0, 6, 12, 18, 24];
+                const diagonal2 = [4, 8, 12, 16, 20];
+                
+                if (diagonal1.every(index => selectedIndices.includes(index)) ||
+                    diagonal2.every(index => selectedIndices.includes(index))) {
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            function toggleAutoPlay() {
+                const autoPlayBtn = document.getElementById('autoPlayBtn');
+                
+                if (isAutoPlaying) {
+                    clearInterval(autoPlayInterval);
+                    autoPlayBtn.textContent = 'Auto Play: OFF';
+                    autoPlayBtn.classList.remove('bg-[#FF4500]');
+                    autoPlayBtn.classList.add('bg-[#4169E1]');
+                    isAutoPlaying = false;
+                } else {
+                    autoPlayInterval = setInterval(callItem, 3000);
+                    autoPlayBtn.textContent = 'Auto Play: ON';
+                    autoPlayBtn.classList.remove('bg-[#4169E1]');
+                    autoPlayBtn.classList.add('bg-[#FF4500]');
+                    isAutoPlaying = true;
+                    
+                    // Call the first item immediately
+                    callItem();
+                }
+            }
+            
+            // Auto-mark squares that match called items
+            function autoMarkSquares() {
+                if (calledItems.length === 0) return;
+                
+                const latestCall = calledItems[0];
+                const squares = document.querySelectorAll('.bingo-square');
+                
+                squares.forEach(square => {
+                    const index = parseInt(square.dataset.index);
+                    if (boardContent[index] && boardContent[index].text === latestCall.text) {
+                        square.classList.add('selected');
+                    }
+                });
+                
+                // Check for bingo after marking
+                if (checkForBingo()) {
+                    document.getElementById('winMessage').classList.remove('hidden');
+                    
+                    // Stop auto play if it's running
+                    if (isAutoPlaying) {
+                        toggleAutoPlay();
+                    }
+                }
+            }
+            
+            // Event listeners
+            document.getElementById('newGameBtn').addEventListener('click', function() {
+                generateBingoBoard();
+            });
+            
+            document.getElementById('callItemBtn').addEventListener('click', function() {
+                callItem();
+                autoMarkSquares();
+            });
+            
+            document.getElementById('checkBingoBtn').addEventListener('click', function() {
+                if (checkForBingo()) {
+                    document.getElementById('winMessage').classList.remove('hidden');
+                } else {
+                    alert("Not quite yet, honey! Keep marking those squares!");
+                }
+            });
+            
+            document.getElementById('closeWinBtn').addEventListener('click', function() {
+                document.getElementById('winMessage').classList.add('hidden');
+            });
+            
+            document.getElementById('autoPlayBtn').addEventListener('click', toggleAutoPlay);
+            
+            // Initialize the game
+            generateBingoBoard();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94b4634e96d33713',t:'MTc0OTE3NTk3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe>
+
+</body></html>
