@@ -1,0 +1,205 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #8B4513 0%, #CD853F 50%, #DEB887 100%);
+    min-height: 100vh;
+}
+
+.title {
+    font-family: 'Satisfy', cursive;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    font-family: 'Permanent Marker', cursive;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+body, h1, h2, h3, h4, h5, h6, p, div, span, button {
+    color: #8B4513 !important;
+}
+
+.bingo-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.bingo-square {
+    aspect-ratio: 1;
+    background: white;
+    border: 2px solid #CD853F;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bingo-square:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bingo-square.selected {
+    background: #FFD700;
+    border-color: #8B4513;
+}
+
+.bingo-square.called {
+    animation: pulse 1s infinite;
+}
+
+.bingo-header {
+    font-family: 'Permanent Marker', cursive;
+    color: #8B4513;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.free-space {
+    background: #FFD700;
+    border-color: #8B4513;
+}
+
+.free-space .icon {
+    font-size: 2rem;
+    color: #8B4513;
+}
+
+.icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.win-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: fadeIn 0.5s ease;
+}
+
+.btn {
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.caller-box {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.called-item {
+    background: white;
+    border: 1px solid #CD853F;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.called-item:nth-child(odd) {
+    background: #FFF8DC;
+}
+
+.called-item.current {
+    background: #FFD700;
+    border-color: #8B4513;
+    animation: pulse 1s infinite;
+}
+
+#gameModes button {
+    transition: all 0.3s ease;
+}
+
+#gameModes button.active {
+    background: #8B4513;
+    transform: scale(1.05);
+}
+
+#statsDisplay {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+#statsDisplay p {
+    margin: 0.5rem 0;
+    color: #8B4513;
+}
+
+#timer {
+    font-family: 'Permanent Marker', cursive;
+    color: #8B4513;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    animation: confetti-fall 1s linear forwards;
+    pointer-events: none;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .bingo-square {
+        font-size: 0.8rem;
+    }
+    
+    .icon {
+        font-size: 1.2rem;
+    }
+    
+    .bingo-header {
+        font-size: 1.2rem;
+    }
+    
+    .called-item {
+        font-size: 0.8rem;
+    }
+} 

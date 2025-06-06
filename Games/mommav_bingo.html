@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momma V's Soul Food Bingo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Permanent+Marker&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="styles/mommav_bingo.css" rel="stylesheet">
+</head>
+<body class="min-h-screen p-8" style="background: #fff;">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="title text-4xl md:text-6xl text-center mb-2 text-[#8B4513]">Momma V's Soul Food Bingo</h1>
+        <p class="subtitle text-xl md:text-2xl text-center mb-8 text-[#8B4513]">Where every square is a taste of home! 🍗</p>
+        
+        <!-- Game Mode Selection -->
+        <div class="mb-8 text-center">
+            <h2 class="text-2xl font-bold mb-4">Game Mode</h2>
+            <div id="gameMode" class="text-xl font-bold mb-2">Classic Mode</div>
+            <p id="gameModeDescription" class="text-lg mb-4">Take your time and enjoy the game!</p>
+            <div id="gameModes" class="flex flex-wrap justify-center gap-4 mb-4"></div>
+            <div id="timer" class="text-2xl font-bold hidden">5:00</div>
+        </div>
+        
+        <!-- Stats Display -->
+        <div class="mb-8 bg-white/10 p-4 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4 text-center">Your Stats</h2>
+            <div id="statsDisplay" class="text-lg"></div>
+            <button id="resetStats" class="btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mt-4">
+                Reset Stats
+            </button>
+        </div>
+        
+        <!-- Game Controls -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button id="newGameBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
+                New Game
+            </button>
+            <button id="callItemBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
+                Call Item
+            </button>
+            <button id="checkBingoBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
+                Check Bingo
+            </button>
+            <button id="autoPlayBtn" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
+                Auto Play: OFF
+            </button>
+            <button id="toggleSound" class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full">
+                🔊 Sound: ON
+            </button>
+        </div>
+        
+        <!-- Bingo Card -->
+        <div class="bingo-card mb-8">
+            <div class="grid grid-cols-5 text-center mb-2">
+                <div class="bingo-header">B</div>
+                <div class="bingo-header">I</div>
+                <div class="bingo-header">N</div>
+                <div class="bingo-header">G</div>
+                <div class="bingo-header">O</div>
+            </div>
+            <div id="bingoGrid" class="grid grid-cols-5 gap-2"></div>
+        </div>
+        
+        <!-- Caller Box -->
+        <div class="caller-box mb-8">
+            <div class="text-center mb-4">
+                <span id="callIcon" class="text-4xl">🎮</span>
+                <p id="callText" class="text-xl mt-2">Press "Call Item" to start!</p>
+            </div>
+            <div id="calledItems" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"></div>
+        </div>
+        
+        <!-- Win Message -->
+        <div id="winMessage" class="win-message hidden">
+            <h2 class="text-3xl font-bold mb-4">BINGO! 🎉</h2>
+            <div id="winStats" class="text-xl mb-4"></div>
+            <button class="btn bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold py-2 px-6 rounded-full" onclick="this.parentElement.classList.add('hidden')">
+                Play Again
+            </button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="js/game-config.js"></script>
+    <script src="js/game-stats.js"></script>
+    <script src="js/bingo-content.js"></script>
+    <script src="js/mommav_bingo.js"></script>
+</body>
+</html>
