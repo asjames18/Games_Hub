@@ -1,0 +1,1316 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hustle &amp; Flow: The Budget Battle Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f0e8;
+            color: #333;
+        }
+        
+        .board-space {
+            width: 120px;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .board-space:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .payday {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .bill-due {
+            background-color: #F44336;
+            color: white;
+        }
+        
+        .invest {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .save-box {
+            background-color: #9C27B0;
+            color: white;
+        }
+        
+        .hustle-card {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .hardship-card {
+            background-color: #F44336;
+            color: white;
+        }
+        
+        .blessing {
+            background-color: #FFD700;
+            color: #333;
+        }
+        
+        .character-card {
+            background: linear-gradient(135deg, #6b4593 0%, #8e44ad 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .character-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+        
+        .event-card {
+            height: 220px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+        
+        .hustle-event {
+            background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+            color: white;
+        }
+        
+        .hardship-event {
+            background: linear-gradient(135deg, #E53935 0%, #C62828 100%);
+            color: white;
+        }
+        
+        .blessing-event {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+            color: #333;
+        }
+        
+        .dice {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dice:hover {
+            transform: rotate(15deg);
+        }
+        
+        .dice:active {
+            transform: rotate(45deg);
+        }
+        
+        .kente-pattern {
+            background-image: repeating-linear-gradient(45deg, 
+                rgba(255,215,0,0.2) 0px, rgba(255,215,0,0.2) 20px, 
+                rgba(156,39,176,0.2) 20px, rgba(156,39,176,0.2) 40px, 
+                rgba(76,175,80,0.2) 40px, rgba(76,175,80,0.2) 60px);
+        }
+        
+        .budget-tracker {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .tab-active {
+            background-color: #6b4593;
+            color: white;
+        }
+        
+        .tab {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab:hover:not(.tab-active) {
+            background-color: #f0e6ff;
+        }
+        
+        /* Game pieces */
+        .game-piece {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            position: absolute;
+            transition: all 0.5s ease;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.relative{position:relative}.inset-0{inset:0px}.z-50{z-index:50}.col-span-5{grid-column:span 5 / span 5}.col-span-full{grid-column:1 / -1}.mx-4{margin-left:1rem;margin-right:1rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-2{margin-top:0.5rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-24{height:6rem}.h-4{height:1rem}.h-40{height:10rem}.w-24{width:6rem}.w-full{width:100%}.max-w-md{max-width:28rem}.cursor-pointer{cursor:pointer}.appearance-none{-webkit-appearance:none;appearance:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-7{grid-template-columns:repeat(7, minmax(0, 1fr))}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t-lg{border-top-left-radius:0.5rem;border-top-right-radius:0.5rem}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-200{--tw-bg-opacity:1;background-color:rgb(191 219 254 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-300{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.bg-gray-600{--tw-bg-opacity:1;background-color:rgb(75 85 99 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-green-200{--tw-bg-opacity:1;background-color:rgb(187 247 208 / var(--tw-bg-opacity, 1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234 / var(--tw-bg-opacity, 1))}.bg-purple-700{--tw-bg-opacity:1;background-color:rgb(126 34 206 / var(--tw-bg-opacity, 1))}.bg-red-200{--tw-bg-opacity:1;background-color:rgb(254 202 202 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-yellow-100{--tw-bg-opacity:1;background-color:rgb(254 249 195 / var(--tw-bg-opacity, 1))}.bg-yellow-400{--tw-bg-opacity:1;background-color:rgb(250 204 21 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-opacity-50{--tw-bg-opacity:0.5}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pt-2{padding-top:0.5rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.italic{font-style:italic}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-red-700{--tw-text-opacity:1;color:rgb(185 28 28 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4 / var(--tw-text-opacity, 1))}.text-yellow-700{--tw-text-opacity:1;color:rgb(161 98 7 / var(--tw-text-opacity, 1))}.text-yellow-900{--tw-text-opacity:1;color:rgb(113 63 18 / var(--tw-text-opacity, 1))}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-700:hover{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.hover\:bg-green-700:hover{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.hover\:bg-purple-800:hover{--tw-bg-opacity:1;background-color:rgb(107 33 168 / var(--tw-bg-opacity, 1))}.hover\:bg-yellow-600:hover{--tw-bg-opacity:1;background-color:rgb(202 138 4 / var(--tw-bg-opacity, 1))}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.md\:text-5xl{font-size:3rem;line-height:1}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Game Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-purple-800">🎲 Hustle &amp; Flow: The Budget Battle Game</h1>
+            <p class="text-xl mt-2 text-gray-600">Build wealth, overcome challenges, and secure your financial future!</p>
+        </div>
+        
+        <!-- Game Controls -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button id="startGame" class="bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition">
+                Start New Game
+            </button>
+            <button id="rollDice" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition" disabled="">
+                Roll Dice
+            </button>
+            <button id="drawCard" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition" disabled="">
+                Draw Card
+            </button>
+            <button id="endTurn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition" disabled="">
+                End Turn
+            </button>
+        </div>
+        
+        <!-- Multiplayer Controls -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button id="addPlayer" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition">
+                Add Player
+            </button>
+            <button id="removePlayer" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition" disabled>
+                Remove Player
+            </button>
+            <button id="showLeaderboard" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition">
+                Show Leaderboard
+            </button>
+        </div>
+        
+        <!-- Player List -->
+        <div id="playerList" class="mt-6 p-4 bg-white rounded-lg shadow-md">
+            <h3 class="text-xl font-bold mb-2">Players</h3>
+            <div id="players" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Players will be added here dynamically -->
+            </div>
+        </div>
+        
+        <!-- Leaderboard -->
+        <div id="leaderboard" class="mt-6 p-4 bg-white rounded-lg shadow-md hidden">
+            <h3 class="text-xl font-bold mb-2">Leaderboard</h3>
+            <div id="leaderboardList" class="space-y-2">
+                <!-- Leaderboard entries will be added here dynamically -->
+            </div>
+        </div>
+        
+        <!-- Game Tabs -->
+        <div class="mb-6">
+            <div class="flex flex-wrap border-b border-gray-300">
+                <div id="boardTab" class="tab tab-active px-6 py-3 font-semibold rounded-t-lg">Game Board</div>
+                <div id="charactersTab" class="tab px-6 py-3 font-semibold rounded-t-lg">Characters</div>
+                <div id="budgetTab" class="tab px-6 py-3 font-semibold rounded-t-lg">Budget Tracker</div>
+                <div id="cardsTab" class="tab px-6 py-3 font-semibold rounded-t-lg">Card Decks</div>
+            </div>
+        </div>
+        
+        <!-- Game Content -->
+        <div class="game-content">
+            <!-- Game Board Section -->
+            <div id="boardSection" class="game-section">
+                <div class="relative kente-pattern p-6 rounded-xl shadow-xl overflow-hidden">
+                    <div class="grid grid-cols-7 gap-4 mb-4">
+                        <div class="board-space payday">Payday<br>+$500</div>
+                        <div class="board-space bill-due">Bill Due<br>-$200</div>
+                        <div class="board-space invest">Invest<br>+$50</div>
+                        <div class="board-space blessing">Blessing<br>from the<br>Ancestors</div>
+                        <div class="board-space hustle-card">Hustle<br>Card</div>
+                        <div class="board-space save-box">Save Box<br>+$100</div>
+                        <div class="board-space hardship-card">Hardship<br>Card</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-4 mb-4">
+                        <div class="board-space hardship-card">Hardship<br>Card</div>
+                        <div class="col-span-5 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="dice mx-auto mb-4" id="incomeDice">?</div>
+                                <p class="font-bold text-xl">Income Dice</p>
+                                <p class="text-sm">Roll to determine your monthly income</p>
+                            </div>
+                        </div>
+                        <div class="board-space payday">Payday<br>+$500</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-4">
+                        <div class="board-space save-box">Save Box<br>+$100</div>
+                        <div class="board-space blessing">Blessing<br>from the<br>Ancestors</div>
+                        <div class="board-space hustle-card">Hustle<br>Card</div>
+                        <div class="board-space bill-due">Bill Due<br>-$200</div>
+                        <div class="board-space invest">Invest<br>+$50</div>
+                        <div class="board-space hardship-card">Hardship<br>Card</div>
+                        <div class="board-space payday">Payday<br>+$500</div>
+                    </div>
+                    
+                    <!-- Game pieces will be added here dynamically -->
+                </div>
+                
+                <!-- Current Player Info -->
+                <div class="mt-6 p-4 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-2">Current Player: <span id="currentPlayerName">-</span></h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-purple-100 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600">Balance</p>
+                            <p class="text-xl font-bold">$<span id="playerBalance">0</span></p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600">Income</p>
+                            <p class="text-xl font-bold">$<span id="playerIncome">0</span>/mo</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600">Savings</p>
+                            <p class="text-xl font-bold">$<span id="playerSavings">0</span></p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600">Credit Score</p>
+                            <p class="text-xl font-bold"><span id="playerCreditScore">650</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game Log -->
+                <div class="mt-6 p-4 bg-white rounded-lg shadow-md h-40 overflow-y-auto">
+                    <h3 class="text-xl font-bold mb-2">Game Log</h3>
+                    <div id="gameLog" class="text-sm">
+                        <p class="text-gray-600">Welcome to Hustle &amp; Flow! Select characters and start the game.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Characters Section -->
+            <div id="charactersSection" class="game-section hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Character 1: The Student -->
+                    <div class="character-card" data-character="student">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold">The Student</h3>
+                            <div class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">Select</div>
+                        </div>
+                        <div class="mb-4">
+                            <svg class="w-24 h-24 mx-auto mb-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="35" r="20" fill="#FFD700"></circle>
+                                <rect x="30" y="55" width="40" height="40" fill="#4169E1"></rect>
+                                <rect x="40" y="65" width="20" height="15" fill="#FFFFFF"></rect>
+                                <rect x="45" y="80" width="10" height="15" fill="#FFFFFF"></rect>
+                            </svg>
+                        </div>
+                        <ul class="text-sm mb-4">
+                            <li>• Starting balance: $500</li>
+                            <li>• Monthly income: $800-$1,200</li>
+                            <li>• Bonus: Student discounts (-10% on bills)</li>
+                        </ul>
+                        <p class="text-xs italic">Backpack, part-time job, dreaming big.</p>
+                    </div>
+                    
+                    <!-- Character 2: The Single Mom -->
+                    <div class="character-card" data-character="mom">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold">The Single Mom</h3>
+                            <div class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">Select</div>
+                        </div>
+                        <div class="mb-4">
+                            <svg class="w-24 h-24 mx-auto mb-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="30" r="18" fill="#FFD700"></circle>
+                                <path d="M30,50 L70,50 L65,100 L35,100 Z" fill="#FF69B4"></path>
+                                <circle cx="70" cy="45" r="10" fill="#87CEEB"></circle>
+                            </svg>
+                        </div>
+                        <ul class="text-sm mb-4">
+                            <li>• Starting balance: $800</li>
+                            <li>• Monthly income: $1,500-$2,200</li>
+                            <li>• Bonus: Childcare vouchers ($200/mo)</li>
+                        </ul>
+                        <p class="text-xs italic">Boss with a baby bag, strength embodied.</p>
+                    </div>
+                    
+                    <!-- Character 3: The Gig Worker -->
+                    <div class="character-card" data-character="gig">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold">The Gig Worker</h3>
+                            <div class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">Select</div>
+                        </div>
+                        <div class="mb-4">
+                            <svg class="w-24 h-24 mx-auto mb-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="30" r="18" fill="#FFD700"></circle>
+                                <rect x="25" y="50" width="50" height="30" rx="5" fill="#A9A9A9"></rect>
+                                <rect x="30" y="55" width="40" height="20" rx="2" fill="#4169E1"></rect>
+                            </svg>
+                        </div>
+                        <ul class="text-sm mb-4">
+                            <li>• Starting balance: $600</li>
+                            <li>• Monthly income: $1,000-$2,500</li>
+                            <li>• Bonus: Flexible schedule (+1 extra move)</li>
+                        </ul>
+                        <p class="text-xs italic">iPad, apps open, hustle in motion.</p>
+                    </div>
+                    
+                    <!-- Character 4: The Elder -->
+                    <div class="character-card" data-character="elder">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold">The Elder</h3>
+                            <div class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">Select</div>
+                        </div>
+                        <div class="mb-4">
+                            <svg class="w-24 h-24 mx-auto mb-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="30" r="18" fill="#FFD700"></circle>
+                                <path d="M35,50 L65,50 L70,100 L30,100 Z" fill="#8B4513"></path>
+                                <rect x="40" y="40" width="20" height="5" fill="#A0522D"></rect>
+                            </svg>
+                        </div>
+                        <ul class="text-sm mb-4">
+                            <li>• Starting balance: $1,200</li>
+                            <li>• Monthly income: $1,400 (fixed)</li>
+                            <li>• Bonus: Community support (skip 1 hardship)</li>
+                        </ul>
+                        <p class="text-xs italic">Fixed income but full of wisdom and church ties.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 p-6 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Selected Characters</h3>
+                    <div id="selectedCharacters" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <p class="col-span-full text-gray-500 italic">No characters selected yet. Click "Select" on a character card to add them to the game.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Budget Tracker Section -->
+            <div id="budgetSection" class="game-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Needs Column -->
+                    <div class="budget-tracker p-6">
+                        <h3 class="text-xl font-bold mb-4 text-red-600">Needs</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Rent/Mortgage</label>
+                                    <span>$<span id="rentAmount">800</span></span>
+                                </div>
+                                <input type="range" min="0" max="2000" value="800" class="w-full h-2 bg-red-200 rounded-lg appearance-none cursor-pointer" id="rentSlider">
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Utilities</label>
+                                    <span>$<span id="utilitiesAmount">200</span></span>
+                                </div>
+                                <input type="range" min="0" max="500" value="200" class="w-full h-2 bg-red-200 rounded-lg appearance-none cursor-pointer" id="utilitiesSlider">
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Groceries</label>
+                                    <span>$<span id="groceriesAmount">300</span></span>
+                                </div>
+                                <input type="range" min="0" max="800" value="300" class="w-full h-2 bg-red-200 rounded-lg appearance-none cursor-pointer" id="groceriesSlider">
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-200">
+                                <div class="flex justify-between font-bold">
+                                    <span>Total Needs</span>
+                                    <span>$<span id="totalNeeds">1300</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Wants Column -->
+                    <div class="budget-tracker p-6">
+                        <h3 class="text-xl font-bold mb-4 text-blue-600">Wants</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Entertainment</label>
+                                    <span>$<span id="entertainmentAmount">100</span></span>
+                                </div>
+                                <input type="range" min="0" max="500" value="100" class="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer" id="entertainmentSlider">
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Fashion</label>
+                                    <span>$<span id="fashionAmount">50</span></span>
+                                </div>
+                                <input type="range" min="0" max="300" value="50" class="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer" id="fashionSlider">
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Dining Out</label>
+                                    <span>$<span id="diningAmount">150</span></span>
+                                </div>
+                                <input type="range" min="0" max="500" value="150" class="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer" id="diningSlider">
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-200">
+                                <div class="flex justify-between font-bold">
+                                    <span>Total Wants</span>
+                                    <span>$<span id="totalWants">300</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Savings Column -->
+                    <div class="budget-tracker p-6">
+                        <h3 class="text-xl font-bold mb-4 text-green-600">Savings</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Emergency Fund</label>
+                                    <span>$<span id="emergencyAmount">100</span></span>
+                                </div>
+                                <input type="range" min="0" max="500" value="100" class="w-full h-2 bg-green-200 rounded-lg appearance-none cursor-pointer" id="emergencySlider">
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Investments</label>
+                                    <span>$<span id="investmentAmount">50</span></span>
+                                </div>
+                                <input type="range" min="0" max="500" value="50" class="w-full h-2 bg-green-200 rounded-lg appearance-none cursor-pointer" id="investmentSlider">
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-medium">Tithes/Giving</label>
+                                    <span>$<span id="tithesAmount">50</span></span>
+                                </div>
+                                <input type="range" min="0" max="300" value="50" class="w-full h-2 bg-green-200 rounded-lg appearance-none cursor-pointer" id="tithesSlider">
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-200">
+                                <div class="flex justify-between font-bold">
+                                    <span>Total Savings</span>
+                                    <span>$<span id="totalSavings">200</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Budget Summary -->
+                <div class="mt-8 p-6 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Budget Summary</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Monthly Income:</span>
+                                <span class="font-bold">$<span id="summaryIncome">1800</span></span>
+                            </div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Total Expenses:</span>
+                                <span class="font-bold">$<span id="summaryExpenses">1800</span></span>
+                            </div>
+                            <div class="flex justify-between pt-2 border-t border-gray-200">
+                                <span class="font-medium">Remaining:</span>
+                                <span class="font-bold" id="summaryRemaining">$0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">Credit Score: <span id="summaryCreditScore">650</span></h4>
+                            <div class="w-full bg-gray-300 rounded-full h-4 mb-2">
+                                <div id="creditScoreBar" class="bg-purple-600 h-4 rounded-full" style="width: 65%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-600">
+                                <span>Poor (300)</span>
+                                <span>Fair (580)</span>
+                                <span>Good (670)</span>
+                                <span>Excellent (800+)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cards Section -->
+            <div id="cardsSection" class="game-section hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Hustle Cards -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-green-600">💼 Hustle Cards</h3>
+                        <div class="event-card hustle-event">
+                            <div>
+                                <h4 class="text-xl font-bold mb-2" id="hustleTitle">Draw a Hustle Card</h4>
+                                <p id="hustleDescription">Click the button below to draw a card and see how your side hustle pays off!</p>
+                            </div>
+                            <button id="drawHustleCard" class="bg-white text-green-700 font-bold py-2 px-4 rounded-lg shadow hover:bg-gray-100 transition">
+                                Draw Card
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6 bg-white p-4 rounded-lg shadow">
+                            <h4 class="font-bold mb-2">Hustle Card Examples:</h4>
+                            <ul class="text-sm space-y-2">
+                                <li>• "You started selling plates on weekends — Earn $150"</li>
+                                <li>• "Pop-up at the Juneteenth market — Earn $300"</li>
+                                <li>• "Your TikTok went viral — You get brand deals: +$500"</li>
+                                <li>• "Side gig as a rideshare driver — Earn $200"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Hardship Cards -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-red-600">🚨 Hardship Cards</h3>
+                        <div class="event-card hardship-event">
+                            <div>
+                                <h4 class="text-xl font-bold mb-2" id="hardshipTitle">Draw a Hardship Card</h4>
+                                <p id="hardshipDescription">Life happens! Draw a card to see what challenge you need to overcome.</p>
+                            </div>
+                            <button id="drawHardshipCard" class="bg-white text-red-700 font-bold py-2 px-4 rounded-lg shadow hover:bg-gray-100 transition">
+                                Draw Card
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6 bg-white p-4 rounded-lg shadow">
+                            <h4 class="font-bold mb-2">Hardship Card Examples:</h4>
+                            <ul class="text-sm space-y-2">
+                                <li>• "Car broke down — Repair costs $400"</li>
+                                <li>• "Cousin needed help with rent — You give $100"</li>
+                                <li>• "Late fee on missed bill — Lose $50 credit score points"</li>
+                                <li>• "Medical emergency — Pay $250 deductible"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Blessing Cards -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-600">🌍 Legacy Blessing</h3>
+                        <div class="event-card blessing-event">
+                            <div>
+                                <h4 class="text-xl font-bold mb-2" id="blessingTitle">Receive a Blessing</h4>
+                                <p id="blessingDescription">Your community and ancestors are looking out for you! Draw a card to receive their support.</p>
+                            </div>
+                            <button id="drawBlessingCard" class="bg-white text-yellow-700 font-bold py-2 px-4 rounded-lg shadow hover:bg-gray-100 transition">
+                                Draw Card
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6 bg-white p-4 rounded-lg shadow">
+                            <h4 class="font-bold mb-2">Blessing Card Examples:</h4>
+                            <ul class="text-sm space-y-2">
+                                <li>• "Grandma slips you $20 — No questions asked"</li>
+                                <li>• "Church Fish Fry raises $200 for your business"</li>
+                                <li>• "Mentor helps you budget — Skip hardship card"</li>
+                                <li>• "Family reunion gift — Receive $50"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Modal -->
+    <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-2xl font-bold mb-4" id="modalTitle">Card Drawn</h3>
+            <p class="mb-6" id="modalContent">Card content goes here.</p>
+            <div class="flex justify-end">
+                <button id="modalClose" class="bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        const gameState = {
+            started: false,
+            currentPlayerIndex: 0,
+            players: [],
+            selectedCharacters: [],
+            currentRoll: 0
+        };
+        
+        // DOM Elements
+        const tabs = document.querySelectorAll('.tab');
+        const gameSections = document.querySelectorAll('.game-section');
+        const startGameBtn = document.getElementById('startGame');
+        const rollDiceBtn = document.getElementById('rollDice');
+        const drawCardBtn = document.getElementById('drawCard');
+        const endTurnBtn = document.getElementById('endTurn');
+        const incomeDice = document.getElementById('incomeDice');
+        const gameLog = document.getElementById('gameLog');
+        const gameModal = document.getElementById('gameModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const modalClose = document.getElementById('modalClose');
+        
+        // Card decks
+        const hustleCards = [
+            { title: "Weekend Food Sales", description: "You started selling plates on weekends — Earn $150", value: 150 },
+            { title: "Juneteenth Market", description: "Pop-up at the Juneteenth market — Earn $300", value: 300 },
+            { title: "Viral TikTok", description: "Your TikTok went viral — You get brand deals: +$500", value: 500 },
+            { title: "Rideshare Driving", description: "Side gig as a rideshare driver — Earn $200", value: 200 },
+            { title: "Freelance Work", description: "Completed a freelance project — Earn $250", value: 250 },
+            { title: "Yard Sale", description: "Organized a community yard sale — Earn $120", value: 120 },
+            { title: "Hair Styling", description: "Did hair for friends and family — Earn $180", value: 180 },
+            { title: "Tutoring", description: "Tutored neighborhood kids — Earn $160", value: 160 },
+            { title: "Handmade Crafts", description: "Sold handmade crafts online — Earn $220", value: 220 },
+            { title: "House Sitting", description: "House sitting for a neighbor — Earn $100", value: 100 }
+        ];
+        
+        const hardshipCards = [
+            { title: "Car Trouble", description: "Car broke down — Repair costs $400", value: -400 },
+            { title: "Family Support", description: "Cousin needed help with rent — You give $100", value: -100 },
+            { title: "Late Fee", description: "Late fee on missed bill — Lose $50 credit score points", creditImpact: -50 },
+            { title: "Medical Emergency", description: "Medical emergency — Pay $250 deductible", value: -250 },
+            { title: "Unexpected Tax", description: "Surprise tax bill — Pay $300", value: -300 },
+            { title: "Phone Damage", description: "Cracked phone screen — Repair costs $150", value: -150 },
+            { title: "Home Repair", description: "Leaky roof needs fixing — Pay $350", value: -350 },
+            { title: "Lost Income", description: "Hours cut at work — Lose $200 income this month", value: -200 },
+            { title: "Utility Spike", description: "Utility bill doubled this month — Pay extra $120", value: -120 },
+            { title: "Parking Ticket", description: "Got a parking ticket — Pay $75", value: -75 }
+        ];
+        
+        const blessingCards = [
+            { title: "Grandma's Gift", description: "Grandma slips you $20 — No questions asked", value: 20 },
+            { title: "Community Support", description: "Church Fish Fry raises $200 for your business", value: 200 },
+            { title: "Financial Mentorship", description: "Mentor helps you budget — Skip next hardship card", skipHardship: true },
+            { title: "Family Reunion", description: "Family reunion gift — Receive $50", value: 50 },
+            { title: "Scholarship", description: "Received a small scholarship — $150 toward education", value: 150 },
+            { title: "Tax Refund", description: "Unexpected tax refund — Receive $250", value: 250 },
+            { title: "Community Garden", description: "Community garden share — Save $80 on groceries", value: 80 },
+            { title: "Credit Boost", description: "On-time payments recognized — Gain 30 credit score points", creditImpact: 30 },
+            { title: "Clothing Donation", description: "Received professional clothes for interviews — Save $100", value: 100 },
+            { title: "Childcare Help", description: "Friend offers free childcare — Save $120 this month", value: 120 }
+        ];
+        
+        // Character definitions
+        const characters = {
+            student: {
+                name: "The Student",
+                balance: 500,
+                incomeRange: [800, 1200],
+                bonus: "Student discounts (-10% on bills)",
+                creditScore: 600,
+                color: "#4169E1"
+            },
+            mom: {
+                name: "The Single Mom",
+                balance: 800,
+                incomeRange: [1500, 2200],
+                bonus: "Childcare vouchers ($200/mo)",
+                creditScore: 680,
+                color: "#FF69B4"
+            },
+            gig: {
+                name: "The Gig Worker",
+                balance: 600,
+                incomeRange: [1000, 2500],
+                bonus: "Flexible schedule (+1 extra move)",
+                creditScore: 640,
+                color: "#A9A9A9"
+            },
+            elder: {
+                name: "The Elder",
+                balance: 1200,
+                incomeRange: [1400, 1400],
+                bonus: "Community support (skip 1 hardship)",
+                creditScore: 720,
+                color: "#8B4513"
+            }
+        };
+        
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('tab-active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('tab-active');
+                
+                // Hide all sections
+                gameSections.forEach(section => section.classList.add('hidden'));
+                
+                // Show the corresponding section
+                const sectionId = tab.id.replace('Tab', 'Section');
+                document.getElementById(sectionId).classList.remove('hidden');
+            });
+        });
+        
+        // Character selection
+        document.querySelectorAll('.character-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const characterType = card.dataset.character;
+                const character = characters[characterType];
+                
+                // Check if character is already selected
+                const isSelected = gameState.selectedCharacters.some(c => c.type === characterType);
+                
+                if (isSelected) {
+                    // Remove character
+                    gameState.selectedCharacters = gameState.selectedCharacters.filter(c => c.type !== characterType);
+                    card.querySelector('div').textContent = 'Select';
+                } else {
+                    // Add character
+                    gameState.selectedCharacters.push({
+                        type: characterType,
+                        ...character,
+                        position: 0,
+                        savings: 0
+                    });
+                    card.querySelector('div').textContent = 'Selected';
+                }
+                
+                updateSelectedCharacters();
+            });
+        });
+        
+        // Update selected characters display
+        function updateSelectedCharacters() {
+            const container = document.getElementById('selectedCharacters');
+            
+            if (gameState.selectedCharacters.length === 0) {
+                container.innerHTML = '<p class="col-span-full text-gray-500 italic">No characters selected yet. Click "Select" on a character card to add them to the game.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            gameState.selectedCharacters.forEach(character => {
+                const charDiv = document.createElement('div');
+                charDiv.className = 'p-3 rounded-lg flex items-center';
+                charDiv.style.backgroundColor = `${character.color}20`;
+                charDiv.style.borderLeft = `4px solid ${character.color}`;
+                
+                charDiv.innerHTML = `
+                    <div class="flex-1">
+                        <p class="font-bold">${character.name}</p>
+                        <p class="text-xs">Starting: $${character.balance}</p>
+                    </div>
+                    <div class="text-xs bg-gray-200 px-2 py-1 rounded-full remove-character" data-character="${character.type}">
+                        Remove
+                    </div>
+                `;
+                
+                container.appendChild(charDiv);
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-character').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const characterType = btn.dataset.character;
+                    
+                    // Update selection UI
+                    document.querySelector(`.character-card[data-character="${characterType}"] div`).textContent = 'Select';
+                    
+                    // Remove from selected characters
+                    gameState.selectedCharacters = gameState.selectedCharacters.filter(c => c.type !== characterType);
+                    
+                    updateSelectedCharacters();
+                });
+            });
+        }
+        
+        // Start game button
+        startGameBtn.addEventListener('click', () => {
+            if (gameState.selectedCharacters.length === 0) {
+                showModal('Select Characters', 'Please select at least one character to start the game.');
+                return;
+            }
+            
+            gameState.started = true;
+            gameState.players = [...gameState.selectedCharacters];
+            gameState.currentPlayerIndex = 0;
+            
+            // Enable game controls
+            rollDiceBtn.disabled = false;
+            drawCardBtn.disabled = false;
+            endTurnBtn.disabled = false;
+            
+            // Switch to board tab
+            document.getElementById('boardTab').click();
+            
+            // Create game pieces
+            createGamePieces();
+            
+            // Update current player info
+            updateCurrentPlayerInfo();
+            
+            // Add to game log
+            addToGameLog('Game started! Roll the dice to determine your income.');
+            
+            // Disable start button
+            startGameBtn.disabled = true;
+            startGameBtn.classList.add('bg-gray-400');
+            startGameBtn.classList.remove('bg-purple-700', 'hover:bg-purple-800');
+        });
+        
+        // Create game pieces on the board
+        function createGamePieces() {
+            const boardSection = document.querySelector('.kente-pattern');
+            
+            // Clear existing pieces
+            document.querySelectorAll('.game-piece').forEach(piece => piece.remove());
+            
+            // Create a piece for each player
+            gameState.players.forEach((player, index) => {
+                const piece = document.createElement('div');
+                piece.className = 'game-piece';
+                piece.id = `piece-${player.type}`;
+                piece.style.backgroundColor = player.color;
+                piece.style.left = `${20 + (index * 15)}px`;
+                piece.style.top = '20px';
+                
+                boardSection.appendChild(piece);
+            });
+        }
+        
+        // Update current player info
+        function updateCurrentPlayerInfo() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            document.getElementById('currentPlayerName').textContent = currentPlayer.name;
+            document.getElementById('playerBalance').textContent = currentPlayer.balance;
+            document.getElementById('playerIncome').textContent = currentPlayer.currentIncome || calculateIncome(currentPlayer);
+            document.getElementById('playerSavings').textContent = currentPlayer.savings;
+            document.getElementById('playerCreditScore').textContent = currentPlayer.creditScore;
+            
+            // Update budget summary
+            document.getElementById('summaryIncome').textContent = currentPlayer.currentIncome || calculateIncome(currentPlayer);
+            document.getElementById('summaryCreditScore').textContent = currentPlayer.creditScore;
+            
+            // Update credit score bar
+            const creditScorePercentage = (currentPlayer.creditScore - 300) / 550 * 100;
+            document.getElementById('creditScoreBar').style.width = `${creditScorePercentage}%`;
+        }
+        
+        // Calculate income based on character type
+        function calculateIncome(player) {
+            const [min, max] = player.incomeRange;
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // Roll dice button
+        rollDiceBtn.addEventListener('click', () => {
+            // Animate dice roll
+            let rolls = 0;
+            const maxRolls = 10;
+            const rollInterval = setInterval(() => {
+                const randomNum = Math.floor(Math.random() * 6) + 1;
+                incomeDice.textContent = randomNum;
+                rolls++;
+                
+                if (rolls >= maxRolls) {
+                    clearInterval(rollInterval);
+                    gameState.currentRoll = parseInt(incomeDice.textContent);
+                    
+                    // Calculate income based on roll
+                    const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+                    const [min, max] = currentPlayer.incomeRange;
+                    const incomeRange = max - min;
+                    const income = Math.floor(min + (incomeRange * gameState.currentRoll / 6));
+                    
+                    currentPlayer.currentIncome = income;
+                    
+                    // Update player info
+                    updateCurrentPlayerInfo();
+                    
+                    // Add to game log
+                    addToGameLog(`${currentPlayer.name} rolled a ${gameState.currentRoll} and earned $${income} this month.`);
+                    
+                    // Move player piece
+                    movePlayerPiece(gameState.currentRoll);
+                }
+            }, 100);
+        });
+        
+        // Move player piece on the board
+        function movePlayerPiece(spaces) {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            const boardSpaces = document.querySelectorAll('.board-space');
+            const totalSpaces = boardSpaces.length;
+            
+            // Calculate new position
+            currentPlayer.position = (currentPlayer.position + spaces) % totalSpaces;
+            
+            // Get the target board space
+            const targetSpace = boardSpaces[currentPlayer.position];
+            const targetRect = targetSpace.getBoundingClientRect();
+            const boardRect = targetSpace.parentElement.getBoundingClientRect();
+            
+            // Calculate relative position
+            const left = targetRect.left - boardRect.left + (targetRect.width / 2) - 15;
+            const top = targetRect.top - boardRect.top + (targetRect.height / 2) - 15;
+            
+            // Move the piece
+            const piece = document.getElementById(`piece-${currentPlayer.type}`);
+            piece.style.left = `${left}px`;
+            piece.style.top = `${top}px`;
+            
+            // Handle space effect
+            setTimeout(() => {
+                handleBoardSpace(targetSpace);
+            }, 500);
+        }
+        
+        // Handle board space effect
+        function handleBoardSpace(space) {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            if (space.classList.contains('payday')) {
+                currentPlayer.balance += 500;
+                showModal('Payday!', 'You received your paycheck of $500.');
+                addToGameLog(`${currentPlayer.name} landed on Payday and received $500.`);
+            } 
+            else if (space.classList.contains('bill-due')) {
+                currentPlayer.balance -= 200;
+                showModal('Bill Due', 'You paid your bills: -$200.');
+                addToGameLog(`${currentPlayer.name} landed on Bill Due and paid $200.`);
+            }
+            else if (space.classList.contains('invest')) {
+                currentPlayer.savings += 50;
+                showModal('Investment Opportunity', 'You invested $50 in your future.');
+                addToGameLog(`${currentPlayer.name} landed on Invest and added $50 to savings.`);
+            }
+            else if (space.classList.contains('save-box')) {
+                currentPlayer.savings += 100;
+                showModal('Save Box', 'You put $100 in your savings.');
+                addToGameLog(`${currentPlayer.name} landed on Save Box and added $100 to savings.`);
+            }
+            else if (space.classList.contains('hustle-card')) {
+                drawHustleCard();
+            }
+            else if (space.classList.contains('hardship-card')) {
+                drawHardshipCard();
+            }
+            else if (space.classList.contains('blessing')) {
+                drawBlessingCard();
+            }
+            
+            // Update player info
+            updateCurrentPlayerInfo();
+        }
+        
+        // Draw card buttons
+        document.getElementById('drawHustleCard').addEventListener('click', drawHustleCard);
+        document.getElementById('drawHardshipCard').addEventListener('click', drawHardshipCard);
+        document.getElementById('drawBlessingCard').addEventListener('click', drawBlessingCard);
+        
+        // Draw hustle card
+        function drawHustleCard() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            const card = hustleCards[Math.floor(Math.random() * hustleCards.length)];
+            
+            document.getElementById('hustleTitle').textContent = card.title;
+            document.getElementById('hustleDescription').textContent = card.description;
+            
+            showModal('Hustle Card', card.description);
+            
+            // Apply card effect
+            if (card.value) {
+                currentPlayer.balance += card.value;
+                addToGameLog(`${currentPlayer.name} drew a Hustle Card: ${card.title} and earned $${card.value}.`);
+            }
+            
+            // Update player info
+            updateCurrentPlayerInfo();
+        }
+        
+        // Draw hardship card
+        function drawHardshipCard() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            // Check if player has "skip hardship" bonus
+            if (currentPlayer.skipHardship) {
+                currentPlayer.skipHardship = false;
+                showModal('Hardship Avoided', 'You used your "Skip Hardship" bonus to avoid this hardship!');
+                addToGameLog(`${currentPlayer.name} used their Skip Hardship bonus.`);
+                return;
+            }
+            
+            const card = hardshipCards[Math.floor(Math.random() * hardshipCards.length)];
+            
+            document.getElementById('hardshipTitle').textContent = card.title;
+            document.getElementById('hardshipDescription').textContent = card.description;
+            
+            showModal('Hardship Card', card.description);
+            
+            // Apply card effect
+            if (card.value) {
+                currentPlayer.balance += card.value; // Value is negative
+                addToGameLog(`${currentPlayer.name} drew a Hardship Card: ${card.title} and lost $${Math.abs(card.value)}.`);
+            }
+            
+            if (card.creditImpact) {
+                currentPlayer.creditScore += card.creditImpact; // Impact is negative
+                addToGameLog(`${currentPlayer.name}'s credit score changed by ${card.creditImpact} points.`);
+            }
+            
+            // Update player info
+            updateCurrentPlayerInfo();
+        }
+        
+        // Draw blessing card
+        function drawBlessingCard() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            const card = blessingCards[Math.floor(Math.random() * blessingCards.length)];
+            
+            document.getElementById('blessingTitle').textContent = card.title;
+            document.getElementById('blessingDescription').textContent = card.description;
+            
+            showModal('Blessing Card', card.description);
+            
+            // Apply card effect
+            if (card.value) {
+                currentPlayer.balance += card.value;
+                addToGameLog(`${currentPlayer.name} received a Blessing: ${card.title} worth $${card.value}.`);
+            }
+            
+            if (card.creditImpact) {
+                currentPlayer.creditScore += card.creditImpact;
+                addToGameLog(`${currentPlayer.name}'s credit score improved by ${card.creditImpact} points.`);
+            }
+            
+            if (card.skipHardship) {
+                currentPlayer.skipHardship = true;
+                addToGameLog(`${currentPlayer.name} can now skip the next hardship card.`);
+            }
+            
+            // Update player info
+            updateCurrentPlayerInfo();
+        }
+        
+        // End turn button
+        endTurnBtn.addEventListener('click', () => {
+            // Move to next player
+            gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.players.length;
+            
+            // Update current player info
+            updateCurrentPlayerInfo();
+            
+            // Add to game log
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            addToGameLog(`It's now ${currentPlayer.name}'s turn.`);
+        });
+        
+        // Budget tracker sliders
+        const sliders = [
+            'rentSlider', 'utilitiesSlider', 'groceriesSlider',
+            'entertainmentSlider', 'fashionSlider', 'diningSlider',
+            'emergencySlider', 'investmentSlider', 'tithesSlider'
+        ];
+        
+        sliders.forEach(sliderId => {
+            const slider = document.getElementById(sliderId);
+            const amountId = sliderId.replace('Slider', 'Amount');
+            
+            slider.addEventListener('input', () => {
+                document.getElementById(amountId).textContent = slider.value;
+                updateBudgetSummary();
+            });
+        });
+        
+        // Update budget summary
+        function updateBudgetSummary() {
+            const rent = parseInt(document.getElementById('rentAmount').textContent);
+            const utilities = parseInt(document.getElementById('utilitiesAmount').textContent);
+            const groceries = parseInt(document.getElementById('groceriesAmount').textContent);
+            
+            const entertainment = parseInt(document.getElementById('entertainmentAmount').textContent);
+            const fashion = parseInt(document.getElementById('fashionAmount').textContent);
+            const dining = parseInt(document.getElementById('diningAmount').textContent);
+            
+            const emergency = parseInt(document.getElementById('emergencyAmount').textContent);
+            const investment = parseInt(document.getElementById('investmentAmount').textContent);
+            const tithes = parseInt(document.getElementById('tithesAmount').textContent);
+            
+            const totalNeeds = rent + utilities + groceries;
+            const totalWants = entertainment + fashion + dining;
+            const totalSavings = emergency + investment + tithes;
+            
+            document.getElementById('totalNeeds').textContent = totalNeeds;
+            document.getElementById('totalWants').textContent = totalWants;
+            document.getElementById('totalSavings').textContent = totalSavings;
+            
+            const totalExpenses = totalNeeds + totalWants + totalSavings;
+            document.getElementById('summaryExpenses').textContent = totalExpenses;
+            
+            const income = parseInt(document.getElementById('summaryIncome').textContent);
+            const remaining = income - totalExpenses;
+            
+            const remainingElement = document.getElementById('summaryRemaining');
+            remainingElement.textContent = `$${remaining}`;
+            
+            if (remaining < 0) {
+                remainingElement.classList.add('text-red-600');
+            } else {
+                remainingElement.classList.remove('text-red-600');
+            }
+        }
+        
+        // Show modal
+        function showModal(title, content) {
+            modalTitle.textContent = title;
+            modalContent.textContent = content;
+            gameModal.classList.remove('hidden');
+        }
+        
+        // Close modal
+        modalClose.addEventListener('click', () => {
+            gameModal.classList.add('hidden');
+        });
+        
+        // Add to game log
+        function addToGameLog(message) {
+            const logEntry = document.createElement('p');
+            logEntry.className = 'mb-1';
+            logEntry.textContent = message;
+            gameLog.appendChild(logEntry);
+            gameLog.scrollTop = gameLog.scrollHeight;
+        }
+        
+        // Initialize budget summary
+        updateBudgetSummary();
+        
+        // Multiplayer state
+        const multiplayerState = {
+            players: [],
+            currentPlayerIndex: 0
+        };
+        
+        // DOM Elements for multiplayer
+        const addPlayerBtn = document.getElementById('addPlayer');
+        const removePlayerBtn = document.getElementById('removePlayer');
+        const showLeaderboardBtn = document.getElementById('showLeaderboard');
+        const playerList = document.getElementById('players');
+        const leaderboard = document.getElementById('leaderboard');
+        const leaderboardList = document.getElementById('leaderboardList');
+        
+        // Add player button
+        addPlayerBtn.addEventListener('click', () => {
+            const playerName = prompt('Enter player name:');
+            if (playerName) {
+                multiplayerState.players.push({
+                    name: playerName,
+                    balance: 1000,
+                    savings: 0,
+                    creditScore: 650,
+                    position: 0
+                });
+                updatePlayerList();
+                updateLeaderboard();
+            }
+        });
+        
+        // Remove player button
+        removePlayerBtn.addEventListener('click', () => {
+            if (multiplayerState.players.length > 0) {
+                multiplayerState.players.pop();
+                updatePlayerList();
+                updateLeaderboard();
+            }
+        });
+        
+        // Show leaderboard button
+        showLeaderboardBtn.addEventListener('click', () => {
+            leaderboard.classList.toggle('hidden');
+        });
+        
+        // Update player list
+        function updatePlayerList() {
+            playerList.innerHTML = '';
+            multiplayerState.players.forEach((player, index) => {
+                const playerDiv = document.createElement('div');
+                playerDiv.className = 'p-3 rounded-lg bg-gray-100';
+                playerDiv.innerHTML = `
+                    <p class="font-bold">${player.name}</p>
+                    <p>Balance: $${player.balance}</p>
+                    <p>Savings: $${player.savings}</p>
+                    <p>Credit Score: ${player.creditScore}</p>
+                `;
+                playerList.appendChild(playerDiv);
+            });
+            removePlayerBtn.disabled = multiplayerState.players.length === 0;
+        }
+        
+        // Update leaderboard
+        function updateLeaderboard() {
+            leaderboardList.innerHTML = '';
+            const sortedPlayers = [...multiplayerState.players].sort((a, b) => b.balance - a.balance);
+            sortedPlayers.forEach((player, index) => {
+                const entry = document.createElement('div');
+                entry.className = 'flex justify-between p-2 bg-gray-100 rounded';
+                entry.innerHTML = `
+                    <span>${index + 1}. ${player.name}</span>
+                    <span>$${player.balance}</span>
+                `;
+                leaderboardList.appendChild(entry);
+            });
+        }
+        
+        // New board space type: Special
+        const specialSpaces = [
+            { title: 'Tax Refund', description: 'You received a tax refund!', value: 200 },
+            { title: 'Lottery Win', description: 'You won the lottery!', value: 500 },
+            { title: 'Inheritance', description: 'You received an inheritance!', value: 1000 }
+        ];
+        
+        // New event card type: Random
+        const randomCards = [
+            { title: 'Random Event 1', description: 'Something unexpected happened!', value: 100 },
+            { title: 'Random Event 2', description: 'Another unexpected event!', value: -100 }
+        ];
+        
+        // Handle special space
+        function handleSpecialSpace() {
+            const currentPlayer = multiplayerState.players[multiplayerState.currentPlayerIndex];
+            const specialSpace = specialSpaces[Math.floor(Math.random() * specialSpaces.length)];
+            showModal('Special Space', specialSpace.description);
+            currentPlayer.balance += specialSpace.value;
+            addToGameLog(`${currentPlayer.name} landed on a special space and received $${specialSpace.value}.`);
+            updatePlayerList();
+            updateLeaderboard();
+        }
+        
+        // Draw random card
+        function drawRandomCard() {
+            const currentPlayer = multiplayerState.players[multiplayerState.currentPlayerIndex];
+            const card = randomCards[Math.floor(Math.random() * randomCards.length)];
+            showModal('Random Card', card.description);
+            currentPlayer.balance += card.value;
+            addToGameLog(`${currentPlayer.name} drew a random card and ${card.value > 0 ? 'gained' : 'lost'} $${Math.abs(card.value)}.`);
+            updatePlayerList();
+            updateLeaderboard();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94dd44a575f6ac95',t:'MTc0OTYwNDYzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe>
+
+</body></html>
